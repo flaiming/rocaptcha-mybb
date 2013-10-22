@@ -6,7 +6,7 @@
 
 // Tell MyBB when to run the hooks
 // $plugins->add_hook("hook name", "function name");
-$plugins->add_hook("member_register_start", "rocaptcha_display");
+$plugins->add_hook("member_register_end", "rocaptcha_display");
 $plugins->add_hook('datahandler_user_validate', 'rocaptcha_verify');
 
 // The information that shows up on the plugin manager
@@ -19,7 +19,7 @@ function rocaptcha_info()
 		"website"		=> "http://rocaptcha.com",
 		"author"		=> "Vojtěch Oram",
 		"authorsite"	=> "http://vojtechoram.cz",
-		"version"		=> "1.0",
+		"version"		=> "1.1",
 		"guid"			=> "54c4ca86c201523a393dd9c3a7854742"
 	);
 }
@@ -29,8 +29,6 @@ function rocaptcha_activate()
 {
 	
 	global $db, $mybb, $lang;
-
-	$lang->load("rocaptcha");
 	
 	$new_template = array(
 		"tid"		=> NULL,
@@ -43,7 +41,7 @@ function rocaptcha_activate()
 		</tr>
 		</table></fieldset>'),
 		"sid"		=> "-1",
-		"version"	=> "1.0",	
+		"version"	=> "1.1",	
 		"dateline"	=> "1368946969",
 	);
 
@@ -153,6 +151,8 @@ function rocaptcha_display()
 		$publickey = $mybb->settings['captcha_public'];
 		$captcha_image = RoCaptcha::getHtml($publickey, null, $mybb->settings['captcha_language']);
 		eval("\$captcha = \"".$templates->get("register_captcha")."\";");
+	} else {
+		$captcha = "";
 	}
 }
 
